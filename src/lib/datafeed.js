@@ -166,15 +166,18 @@ class Datafeed {
       log('socket connect onerror', this._maxId, cl._maxId, e.message);
     }
 
-    cl.onclose = () => {
+    cl.onclose = (e) => {
       log('socket connect closed', this._maxId, cl._maxId);
       this._handleClose();
 
-      // try to reconnect
-      _.delay(() => {
-        this._connecting = false;
-        this.connectSocket();
-      }, 3000);
+      // LUL I don't want to reconnect, just please close it
+      if (e.code != 4200) {
+        // try to reconnect
+        _.delay(() => {
+          this._connecting = false;
+          this.connectSocket();
+        }, 3000);
+      }
     };
   }
 
@@ -268,9 +271,10 @@ class Datafeed {
       const prefix = getTopicPrefix(topic);
       const listeners = this.topicListener[prefix];
       if (listeners) {
-        _.each(listeners, ({ hook }) => {
+        // NOTE: this is custom, we pass the ID as well into the 'hook'
+        _.each(listeners, ({ hook, id }) => {
           if (typeof hook === 'function') {
-            hook(message);
+            hook(message, id);
           }
         });
       }
@@ -373,6 +377,10 @@ class Datafeed {
       clearInterval(this._pingTs);
       this._pingTs = null;
     }
+  }
+
+  clearPing() {
+    this._clearPing();
   }
 
   _ping() {

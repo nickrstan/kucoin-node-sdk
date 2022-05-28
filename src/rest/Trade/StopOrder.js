@@ -45,6 +45,14 @@ exports.postStopOrder = async function postStopOrder(baseParams = {}, orderParam
   });
 };
 
+/** */
+exports.getOrderByID = async function getOrderByID(orderId) {
+  return await Http().GET(`/api/v1/stop-order/${orderId}`);
+}
+
+exports.cancelOrderByOrderID = async function cancelOrderByOrderID(orderId) {
+  return await Http().DEL(`/api/v1/stop-order/${orderId}`);
+}
 
 /**
  * @name cancelOrder
