@@ -42,7 +42,7 @@ exports.getMarketHistories = async function getMarketHistories(symbol) {
  *   - {number} endAt - [Optional] End time (second), default is 0
  * @return {Object} { code, success, data }
  */
-exports.getMarketCandles = async function getMarketCandles(symbol, type, { startAt, endAt } = {}) {
+exports.getMarketCandles = async function getMarketCandles(symbol, type, startAt, endAt) {
   /*
   {
     "code": "200000",     
